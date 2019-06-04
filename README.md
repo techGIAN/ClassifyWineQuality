@@ -132,3 +132,56 @@ pred_clf = clf.predict(X_test)
 The one that concerns Deep Learning, or the Neural Networks wherein the input (the feature variables) go through a series of networks called the hidden layers and will eventually end up with an output or a single output. Each one is called a node and forms a network that of a brain neuron, hence it is called the neural networks. As an illustration:
 
 ![neural_nets](img/neural_nets.png)
+
+The Multi-Layer Perceptron Classifier (MLPC) is not-so-good with smaller datasets (such as this one). It works better for larger datasets such as Twitter feeds, etc. In our code below, since we made use of 11 variables, then we have 11 nodes for each hidden layer, and we assume that there are three hidden layers. Let the tolerance or max number of iterations be 500. The default is 200 by the way. Then we do the same thing as RFC and SVC.
+
+```python
+mlpc = MLPClassifier(hidden_layer_sizes=(11,11,11), max_iter=500)
+mlpc.fit(X_train, y_train)
+pred_mlpc = mlpc.predict(X_test)
+```
+
+## Performance and Accuracy
+The performance, or how well the model has performed is based off of three important metrics (thanks to our initial package imports!). The first is the Precision, the second is the Recall and the third is the F1-Score. All these are based of the Confusion Matrix, that compares the predicted values made by the model, and the actual values in the test set. There are four: the True Positive (or TP, which means that the model was able to predict a `1` while the actual value was also a `1`), the True Negative (or TN, similar to TP but for `0`s time), the False Positive (or FP, where the model predicts a `1` when it should have actually predicted a `0`) and the False Negative (or FN, which is a vice versa of the previous). These four make up of the Confusion Matrix. You need not really know about it but the Precision and Recall are based off of the number of TP, TN, FP and FN that has been calculated and there is a formula for it, but it's not really necessary to know as SciKitLearn calculates it for you. The F1-Score is a score based off of Precision and Recall, and again formula is not of the essence.
+
+If we would like a display of the calssification report and the confusion matrix, simply type in
+
+```python
+print(classification_report(y_test, pred_rfc))
+print(confusion_matrix(y_test, pred_rfc)) 
+```
+
+Notice that the above lines are for the Random Forest Classifier, you simply need to change the parameters to `pred_clf` and `pred_mlpc` respectively in order to show the reports and matrices for the SVC and MLPC. For the above, it should output something like this
+
+```
+             precision    recall  f1-score   support
+
+          0       0.92      0.97      0.94       273
+          1       0.74      0.53      0.62        47
+
+avg / total       0.90      0.90      0.90       320
+
+[[264   9]
+ [ 22  25]]
+```
+
+To interpret this result, this means that the model is accurately able to predict only 25 good wines and 264 bad wines. It was able to predict 31 wines incorrectly; it had said that 9 were good when it was actually bad (False Positive), but then it also said that 22 were bad when they were all actually good (False Negative).
+
+For accuracy, simply type in `accuracy_score(y_test, pred_rfc)` to calculate the accuracy of our Random Forest Classifier model. On average, you should get around `0.903125`. And this is a good accuracy for a model. Do the same for the SVC and MLPC and see what you get.
+
+## Testing
+It's good to test out your model! Have this block of code
+
+```python
+Xnew = [[7.3,0.58,0.00,1.8,0.065,15.0,21.0,0.9946,3.36,0.45,9.1]]
+Xnew = sc.transform(Xnew)
+ynew = rfc.predict(Xnew)
+ynew
+```
+
+We are simply giving it a new input, all data values unique from any data in our initial dataset. The RFC will predict 1 or 0 (good or bad wine). We cannot guarantee for sure if it was able to predict correctly, although we know that it had a good prediction due to the high 90% accuracy. This should output a bad wine.
+
+From here, there are multiple things you can do. You can try out and test using SVC and MLPC models. Do they output the same result? How about try running another ML model? How about adding more data into your dataset. The more data your dataset has, the more data you can use to train and test your models with.
+
+## Final Words
+Credits given to this YouTube channel for putting up a SciKitLearn Machine Learning in Python tutorial video: https://www.youtube.com/watch?v=0Lt9w-BxKFQ. I learned a lot from this guy, so go check him out and his other videos. Subscribe to him as well. It was great watching his videos; I tried using my own words to explain what was happening in each code, but most of the code I credit to him. I also attached my HTML for the Jupyter Notebook of this examplar here in my GitHub. So feel free to take a look at my code - and yes, my code is dirty. I was simply experimenting, playing around and studying it for myself. Any comments about my write-ups, please come let me know! Also, I have a Tech-blog: http://galix.me/tech-blogz/tech.html. Visit me on my website even though it's not 100% complete: https://galix.me/
