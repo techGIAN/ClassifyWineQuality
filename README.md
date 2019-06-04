@@ -12,6 +12,7 @@ from sklearn.svm import SVC
 from sklearn import svm
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import confusion_matrix, classification_report
+from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.model_selection import train_test_split
 %matplotlib inline
@@ -22,7 +23,7 @@ from sklearn.model_selection import train_test_split
 
 `MatPlotLib` is a 2D plotting library used in Python. `Seaborn`'s data visualization is based off of `MatPlotLib` - so we will import this as well. But again, is not necessary if Seaborn isn't used.
 
-`Sklearn` (or SciKitLearn) is the machine learning library in Python, and it contains several various ML algorithms that we can use. For the purposes of this example, we will take a look into Random Forest Classifier, Support Vector, and Multi-Layer Perceptron. There are still a lot more of these algorithms; but if you are interested check out the link: https://scikit-learn.org/stable/
+`Sklearn` (or SciKitLearn) is the machine learning library in Python, and it contains several various ML algorithms that we can use. For the purposes of this example, we will take a look into Random Forest Classifier, Support Vector, and Multi-Layer Perceptron. There are still a lot more of these algorithms such as Logistic Regression, k-Nearest Neighbors, Naive Bayes, etc.; but if you are interested check out the link: https://scikit-learn.org/stable/
 
 Let us begin by examining our data. For this, we will be using the `winequality-red.csv` dataset; you can download this dataset from Kaggle here: https://www.kaggle.com/uciml/red-wine-quality-cortez-et-al-2009
 
@@ -108,3 +109,26 @@ The first block of the code above allows the dataset to be separated into respon
 Now it is time to train and test split the data. Have four variables ready: `X_train`, `X_test`, `y_train`, `y_test`. The `train_test_split()` method helps us with this. In takes in four parameters, the first two being the feature and response variables respectively. The third one determines how much of the dataset becomes the testing size. In our code, we use one-fifth of it or 20%. `random_state` is our fourth parameter and is some random seed, which doesn't really matter.
 
 Standard Scaling is a critical step too as it optimizes the result. Imagine that a few of your feature variables deal with decimals while the others deal with hundreds or thousands? That will be a problem since it can cause some overpower in some parts of your data. Hence, to level this playing field we apply Standard Scaling, using the `StandardScaler()` from the SciKitLearn library. We then use a `fit_transform` on the `X_train` that we just trained, and then transform this into the `X_test`. And now, we are ready to apply some Machine Learning Algorithms.
+
+## Random Forest Classifier
+Here is the code to be used for the Random Forest Classifier. The parameter `n_estimators` simply determines how many forests are there in the tree. In my case, I have used 200. We shall then fit the `X` and the `y` that we used for training and use the model to predict the quality of the wine for those in the test set. We will then be comparing the predicted values vs the actuals through the use of the scoring metrics, such as the Confusion Matrix. We will talk more about this and accuracy later. For now, let us cover the two other algorithms.
+
+```python
+rfc = RandomForestClassifier(n_estimators=200) 
+rfc.fit(X_train, y_train)
+pred_rfc = rfc.predict(X_test)
+```
+
+## Support Vector Classifier (SVC)
+The SVC (or SVM, Support Vector Machines), unlike the Random Forest Classifier, have no parameters. Hence:
+
+```python
+clf = svm.SVC()
+clf.fit(X_train, y_train)
+pred_clf = clf.predict(X_test)
+```
+
+## Multi-Layer Perceptron Classifier (MLPC)
+The one that concerns Deep Learning, or the Neural Networks wherein the input (the feature variables) go through a series of networks called the hidden layers and will eventually end up with an output or a single output. Each one is called a node and forms a network that of a brain neuron, hence it is called the neural networks. As an illustration:
+
+![neural_nets](img/neural_nets.png)
