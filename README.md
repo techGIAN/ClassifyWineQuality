@@ -75,3 +75,36 @@ Ok, so first off we have to identify the dependent variable amongst our variable
 [bad, good]
 Categories (2, object): [bad < good]
 ```
+
+The next two lines deals with the `LabelEncoder()` which encodes labels with values between `0` and `1` (can change depending on the number of classes). I would normally use the `.head()` function to see the data manipulated at hand currently; but I would simply do so at the end so as not to be repetitive.
+
+```python
+label_quality = LabelEncoder()
+wine['quality'] = label_quality.fit_transform(wine['quality'])
+```
+
+By the way, there is a method called `wine['quality'].value_counts()` which allows you to know how many of the items in the column are `0`s and how many are `1`s. In our dataset, we should have 1382 `0`s and 217 `1`s. Also, another interesting thing is that we can use `Seaborn` in order to get a quick visual on our data. To do so, just type in `sns.countplot(wine['quality'])`, and it should output this:
+
+![wine02](img/wine02.png)
+
+Now, we will be doing a couple of more things to get ourselves ready to perform some machine learning algorithms. 
+
+```python
+#Now separate the dataset as response variable and feature variables
+X = wine.drop('quality', axis=1)
+y = wine['quality']
+
+#Train and test splitting of data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 42)
+
+#Applying Standard scaling to get optimized result
+sc = StandardScaler() 
+X_train = sc.fit_transform(X_train)
+X_test = sc.transform(X_test)
+```
+
+The first block of the code above allows the dataset to be separated into response and feature variables, that is to say all independent variables (the `x`'s are now on one the dataframe `X`) while the dependent variable `quality` will be in the variable `y`.  So `X = wine.drop('quality', axis=1)` will drop the column `quality` (we know it's column because we specified the `axis` as `1`; `0` if it was a row). Furthermore, note that because of immutability, then `wine.drop('quality', axis=1)` does not really do anything. Assigning this to `wine` however or some other variable changes everything! In `y = wine['quality']`, we extract the column `quality` from the dataframe `wine` and dump it into `y`.
+
+Now it is time to train and test split the data. Have four variables ready: `X_train`, `X_test`, `y_train`, `y_test`. The `train_test_split()` method helps us with this. In takes in four parameters, the first two being the feature and response variables respectively. The third one determines how much of the dataset becomes the testing size. In our code, we use one-fifth of it or 20%. `random_state` is our fourth parameter and is some random seed, which doesn't really matter.
+
+Standard Scaling is a critical step too as it optimizes the result. Imagine that a few of your feature variables deal with decimals while the others deal with hundreds or thousands? That will be a problem since it can cause some overpower in some parts of your data. Hence, to level this playing field we apply Standard Scaling, using the `StandardScaler()` from the SciKitLearn library. We then use a `fit_transform` on the `X_train` that we just trained, and then transform this into the `X_test`. And now, we are ready to apply some Machine Learning Algorithms.
